@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conquista tu Serie Mundial - Minijuegos Copero Béisbol</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0B0E14;
+      --bg-card: #151921;
+      --bg-input: #1F2430;
+      --accent-color: #3B82F6;
+      --accent-hover: #2563EB;
+      --accent-gold: #F59E0B;
+      --text-main: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --border-color: #2D3748;
+      --danger-color: #EF4444;
+      --success-color: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1100px;
+      background: #11141C;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      position: relative;
+      min-height: 680px;
+    }
+
+    /* NAV HEADER */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 10px;
+    }
+
+    .lang-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--text-main);
+      color: var(--bg-main);
+      border-color: var(--text-main);
+    }
+
+    /* SCREENS GENERAL */
+    .screen {
+      display: none;
+      padding: 30px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: #FFFFFF;
+      color: #000000;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card);
+      border-color: var(--text-muted);
+    }
+
+    /* SCREEN 1: MAIN MENU */
+    .menu-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .graphic-card {
+      background: linear-gradient(135deg, #1E1B4B 0%, #311042 100%);
+      border-radius: 16px;
+      height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+
+    .graphic-diamond {
+      width: 180px;
+      height: 180px;
+      border: 2px dashed rgba(255,255,255,0.3);
+      transform: rotate(45deg);
+      position: absolute;
+    }
+
+    .graphic-ball {
+      font-size: 5rem;
+      z-index: 2;
+      filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.5));
+    }
+
+    .menu-content h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 15px;
+    }
+
+    .menu-content p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .mode-pill {
+      padding: 8px 20px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .mode-pill.active {
+      background: #FFFFFF;
+      color: #000000;
+      border-color: #FFFFFF;
+    }
+
+    .mode-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      min-height: 20px;
+    }
+
+    .menu-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* SCREEN 2: IDENTITY CREATION */
+    .identity-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 300px;
+      gap: 25px;
+      margin-top: 15px;
+    }
+
+    .jersey-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .jersey-svg {
+      width: 150px;
+      height: 160px;
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-weight: 600;
+      outline: none;
+    }
+
+    .toggle-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      background: var(--bg-input);
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-btn.active {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    .nation-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-box {
+      margin-bottom: 15px;
+    }
+
+    .country-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .country-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg-input);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .country-item:hover, .country-item.selected {
+      border-color: var(--accent-color);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .field-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .baseball-field {
+      width: 240px;
+      height: 240px;
+      background: #15803D;
+      border-radius: 12px;
+      position: relative;
+      border: 2px solid #22C55E;
+      margin-top: 15px;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .pos-btn {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: #FFFFFF;
+      color: #000000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: 2px solid var(--bg-main);
+      transform: translate(-50%, -50%);
+      transition: all 0.2s ease;
+    }
+
+    .pos-btn.selected {
+      background: var(--accent-gold);
+      color: #FFFFFF;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    .pos-P { top: 50%; left: 50%; }
+    .pos-C { top: 85%; left: 50%; }
+    .pos-1B { top: 60%; left: 75%; }
+    .pos-2B { top: 38%; left: 63%; }
+    .pos-3B { top: 60%; left: 25%; }
+    .pos-SS { top: 38%; left: 37%; }
+    .pos-LF { top: 20%; left: 20%; }
+    .pos-CF { top: 12%; left: 50%; }
+    .pos-RF { top: 20%; left: 80%; }
+
+    /* SCREEN 3: DASHBOARD */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr 280px;
+      gap: 20px;
+    }
+
+    .player-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .ovr-badge {
+      width: 60px;
+      height: 60px;
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 900;
+      font-size: 1.8rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: var(--bg-input);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .stat-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .stat-lbl {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .offers-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .offers-header {
+      margin-bottom: 20px;
+    }
+
+    .offers-header h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .offers-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .offer-card {
+      background: var(--bg-input);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .offer-card:hover {
+      border-color: var(--accent-color);
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .offer-info h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .offer-info .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent-gold);
+      margin-top: 5px;
+    }
+
+    .timeline-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      max-height: 520px;
+      overflow-y: auto;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .timeline-age {
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      width: 30px;
+    }
+
+    .timeline-content {
+      background: var(--bg-input);
+      padding: 8px 12px;
+      border-radius: 8px;
+      flex: 1;
+      font-size: 0.8rem;
+    }
+
+    /* MODAL EVENT */
+    .modal-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      padding: 25px;
+    }
+
+    .event-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--accent-gold);
+    }
+
+    .event-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .event-opt-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 8px;
+      color: var(--text-main);
+      text-align: left;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .event-opt-btn:hover {
+      border-color: var(--accent-color);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- NAV HEADER -->
+    <div class="top-nav">
+      <div class="brand-title">MINIJUEGOS COPERO</div>
+      <div class="lang-selector">
+        <button class="lang-btn active">ES</button>
+        <button class="lang-btn">EN</button>
+        <button class="lang-btn">PT</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 1: MENU PRINCIPAL -->
+    <div id="screen-menu" class="screen active">
+      <div class="menu-layout">
+        <div class="graphic-card">
+          <div class="graphic-diamond"></div>
+          <div class="graphic-ball">⚾</div>
+          <p style="margin-top: 20px; font-weight: 700; letter-spacing: 1px; color: rgba(255,255,255,0.7);">BASEBALL CAREER</p>
+        </div>
+        <div class="menu-content">
+          <h1>Conquista tu Serie Mundial</h1>
+          <p>Elege tu posición, tomá decisiones clave y dejá que el destino te lleve a una trayectoria única de home runs, estadísticas y momentos decisivos.</p>
+          
+          <div class="mode-selector">
+            <button class="mode-pill active" onclick="setMode('Intensa', this)">Intensa</button>
+            <button class="mode-pill" onclick="setMode('Normal', this)">Normal</button>
+          </div>
+          <div class="mode-desc" id="mode-desc-text">Decisiones estratégicas turno a turno con inmersión profunda.</div>
+
+          <div class="menu-actions">
+            <button class="btn-primary" onclick="goToScreen('screen-identity')">Comenzar carrera</button>
+            <button class="btn-secondary">Volver a Juegos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: CREACIÓN DE JUGADOR -->
+    <div id="screen-identity" class="screen">
+      <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 10px;">Definí tu identidad</h2>
+      
+      <div class="identity-grid">
+        <!-- JERSEY CONTAINER -->
+        <div class="jersey-container">
+          <svg class="jersey-svg" viewBox="0 0 100 100">
+            <path d="M 30,20 L 70,20 L 80,35 L 70,40 L 70,85 L 30,85 L 30,40 L 20,35 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1.5"/>
+            <line x1="40" y1="20" x2="40" y2="85" stroke="#1E3A8A" stroke-width="1.5"/>
+            <line x1="50" y1="20" x2="50" y2="85" stroke="#1E3A8A" stroke-width="1.5"/>
+            <line x1="60" y1="20" x2="60" y2="85" stroke="#1E3A8A" stroke-width="1.5"/>
+            <path d="M 40,20 Q 50,30 60,20" fill="none" stroke="#1E3A8A" stroke-width="2"/>
+            <text x="50" y="45" font-size="7" font-weight="900" fill="#000000" text-anchor="middle" id="jersey-name-preview">GARCIA</text>
+            <text x="50" y="68" font-size="18" font-weight="900" fill="#000000" text-anchor="middle" id="jersey-num-preview">10</text>
+          </svg>
+
+          <div class="form-group">
+            <label>APELLIDO</label>
+            <input type="text" id="player-lastname" class="form-input" value="GARCIA" oninput="updateJersey()">
+          </div>
+
+          <div class="form-group">
+            <label>NÚMERO</label>
+            <input type="number" id="player-number" class="form-input" value="10" max="99" min="0" oninput="updateJersey()">
+          </div>
+
+          <div class="form-group">
+            <label id="profile-arm-label">BRAZO DE BATEO</label>
+            <div class="toggle-group">
+              <button class="toggle-btn" id="arm-left" onclick="setArm('Izquierda')">Izquierda</button>
+              <button class="toggle-btn active" id="arm-right" onclick="setArm('Derecha')">Derecha</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NATION SELECTOR -->
+        <div class="nation-container">
+          <label style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px;">NACIONALIDAD</label>
+          <input type="text" class="form-input search-box" placeholder="🔍 Buscar país..." oninput="filterCountries(this.value)">
+          <div class="country-list" id="country-list-box">
+            <!-- Dynamic Country List -->
+          </div>
+        </div>
+
+        <!-- BASEBALL FIELD POSITIONS -->
+        <div class="field-container">
+          <label style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px;">POSICIÓN EN EL CAMPO</label>
+          <div class="baseball-field">
+            <div class="pos-btn pos-P" onclick="selectPos('P', this)">P</div>
+            <div class="pos-btn pos-C" onclick="selectPos('C', this)">C</div>
+            <div class="pos-btn pos-1B" onclick="selectPos('1B', this)">1B</div>
+            <div class="pos-btn pos-2B" onclick="selectPos('2B', this)">2B</div>
+            <div class="pos-btn pos-3B" onclick="selectPos('3B', this)">3B</div>
+            <div class="pos-btn pos-SS selected" onclick="selectPos('SS', this)">SS</div>
+            <div class="pos-btn pos-LF" onclick="selectPos('LF', this)">LF</div>
+            <div class="pos-btn pos-CF" onclick="selectPos('CF', this)">CF</div>
+            <div class="pos-btn pos-RF" onclick="selectPos('RF', this)">RF</div>
+          </div>
+          <div style="margin-top: 20px; text-align: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Seleccionado: </span>
+            <strong id="selected-pos-text" style="color: var(--accent-gold);">SS (Shortstop)</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <button class="btn-secondary" onclick="goToScreen('screen-menu')">Volver</button>
+        <button class="btn-primary" onclick="confirmIdentity()">Confirmar identidad</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: HUB / DASHBOARD -->
+    <div id="screen-dashboard" class="screen">
+      <div class="dash-grid">
+        
+        <!-- PLAYER CARD -->
+        <div class="player-card">
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="ovr-badge" id="dash-ovr">50</div>
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800;" id="dash-name">V. GARCÍA</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted);" id="dash-details">🇲🇽 #10 SS | Buscando Club...</p>
+              <p style="font-size: 0.75rem; color: var(--accent-gold); font-weight: 700; margin-top: 4px;" id="dash-val">Valor: $100K</p>
+            </div>
+          </div>
+
+          <div class="stats-grid" id="dash-stats-box">
+            <!-- Dynamic Stats -->
+          </div>
+
+          <div style="margin-top: 25px;">
+            <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted);">VITRINA DE TROFEOS</label>
+            <div style="background: var(--bg-input); padding: 15px; border-radius: 8px; margin-top: 8px; text-align: center; font-size: 0.8rem; color: var(--text-muted);" id="trophy-case">
+              Sin trofeos registrados aún
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btn-advance-season" style="width: 100%; margin-top: 20px; display: none;" onclick="advanceSeason()">Avanzar Temporada ➔</button>
+        </div>
+
+        <!-- RECRUITMENT OFFERS INTERACTION -->
+        <div class="offers-container">
+          <div class="offers-header">
+            <h3>Ofertas de Reclutamiento Inicial</h3>
+            <p id="recruitment-subtitle">Tres clubes quieren sumarte a su proyecto juvenil. Elegí dónde empieza tu carrera.</p>
+          </div>
+
+          <div class="offers-grid" id="offers-grid-box">
+            <!-- Random offers injected dynamically -->
+          </div>
+        </div>
+
+        <!-- TIMELINE HISTORY -->
+        <div class="timeline-container">
+          <h4 style="font-size: 0.9rem; font-weight: 800; margin-bottom: 15px;">Trayectoria de Carrera</h4>
+          <div id="timeline-box">
+            <!-- Dynamic Timeline Items -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EVENT DECISION MODAL -->
+    <div class="modal-overlay" id="event-modal">
+      <div class="event-card">
+        <div class="event-title" id="event-title">¡Evento de Carrera!</div>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-main);" id="event-desc">Descripción del evento...</p>
+        <div class="event-options" id="event-options-box">
+          <!-- Options injected dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // GAME STATE
+    let gameState = {
+      mode: 'Intensa',
+      lastname: 'GARCIA',
+      number: 10,
+      arm: 'Derecha',
+      country: { name: 'México', flag: '🇲🇽', key: 'MEX' },
+      position: 'SS',
+      age: 16,
+      ovr: 52,
+      team: 'Sin Club',
+      value: 100000,
+      signed: false,
+      stats: {
+        JJ: 0,
+        HR: 0,
+        RBI: 0,
+        AVG: '.000',
+        ERA: '0.00',
+        SO: 0,
+        WHIP: '0.00'
+      },
+      history: []
+    };
+
+    const countries = [
+      { name: 'México', flag: '🇲🇽', key: 'MEX' },
+      { name: 'República Dominicana', flag: '🇩🇴', key: 'DOM' },
+      { name: 'Venezuela', flag: '🇻🇪', key: 'VEN' },
+      { name: 'Estados Unidos', flag: '🇺🇸', key: 'USA' },
+      { name: 'Japón', flag: '🇯🇵', key: 'JPN' },
+      { name: 'Puerto Rico', flag: '🇵🇷', key: 'PUR' },
+      { name: 'Cuba', flag: '🇨🇺', key: 'CUB' },
+      { name: 'Colombia', flag: '🇨🇴', key: 'COL' },
+      { name: 'Panamá', flag: '🇵🇦', key: 'PAN' },
+      { name: 'Corea del Sur', flag: '🇰🇷', key: 'KOR' },
+      { name: 'Canadá', flag: '🇨🇦', key: 'CAN' },
+      { name: 'Nicaragua', flag: '🇳🇮', key: 'NIC' }
+    ];
+
+    // LOCAL LEAGUES / ACADEMIES DATABASE BY COUNTRY OR REGION
+    const countryTeamsDatabase = {
+      MEX: {
+        league: "Liga Mexicana de Béisbol (LMB / LMP)",
+        teams: ["Toros de Tijuana", "Diablos Rojos del México", "Sultanes de Monterrey", "Naranjeros de Hermosillo", "Tomateros de Culiacán", "Charros de Jalisco", "Águilas de Mexicali", "El Águila de Veracruz"]
+      },
+      DOM: {
+        league: "Liga de Béisbol Profesional (LIDOM)",
+        teams: ["Tigres del Licey", "Águilas Cibaeñas", "Leones del Escogido", "Gigantes del Cibao", "Estrellas Orientales", "Toros del Este"]
+      },
+      VEN: {
+        league: "Liga Venezolana de Béisbol (LVBP)",
+        teams: ["Leones del Caracas", "Navegantes del Magallanes", "Tiburones de La Guaira", "Tigres de Aragua", "Cardenales de Lara", "Águilas del Zulia"]
+      },
+      USA: {
+        league: "Sucursales de Béisbol Organizado (AA / AAA)",
+        teams: ["Scranton/Wilkes-Barre RailRiders", "Oklahoma City Dodgers", "Round Rock Express", "Durham Bulls", "Reno Aces", "El Paso Chihuahuas"]
+      },
+      JPN: {
+        league: "Nippon Professional Baseball (NPB)",
+        teams: ["Yomiuri Giants", "Fukuoka SoftBank Hawks", "Hanshin Tigers", "Orix Buffaloes", "Chiba Lotte Marines"]
+      },
+      PUR: {
+        league: "Liga de Béisbol Profesional Roberto Clemente (LBPRC)",
+        teams: ["Criollos de Caguas", "Indios de Mayagüez", "Cangrejeros de Santurce", "Gigantes de Carolina"]
+      },
+      CUB: {
+        league: "Serie Nacional de Béisbol (SNB)",
+        teams: ["Industriales de La Habana", "Avispas de Santiago de Cuba", "Alazanes de Granma", "Cocodrilos de Matanzas"]
+      },
+      KOR: {
+        league: "KBO League",
+        teams: ["SSG Landers", "LG Twins", "Doosan Bears", "Kia Tigers", "KT Wiz"]
+      },
+      // DEFAULT FALLBACK FOR COL, PAN, CAN, NIC, ETC. (CARIBBEAN / REGIONAL ACADEMIES)
+      CARIBBEAN_FALLBACK: {
+        league: "Academia Internacional del Caribe",
+        teams: ["Academia de Desarrollo del Caribe", "Prospectos de Panamá", "Caimanes de Barranquilla", "Gigantes de Rivas", "Royal Canadian Baseball Academy"]
+      }
+    };
+
+    // GLOBAL MLB TEAMS FOR LATER CAREER OFFERS
+    const mlbDatabase = ["Yankees de Nueva York", "Dodgers de Los Ángeles", "Padres de San Diego", "Red Sox de Boston", "Astros de Houston", "Cubs de Chicago", "Braves de Atlanta", "Mets de Nueva York"];
+
+    // INITIALIZATION
+    window.onload = () => {
+      renderCountries(countries);
+    };
+
+    function setMode(mode, btn) {
+      gameState.mode = mode;
+      document.querySelectorAll('.mode-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('mode-desc-text').innerText = mode === 'Intensa' 
+        ? 'Decisiones estratégicas turno a turno con inmersión profunda.' 
+        : 'Simulación fluida enfocada en progresión rápida de temporadas.';
+    }
+
+    function goToScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function updateJersey() {
+      const name = document.getElementById('player-lastname').value.toUpperCase() || 'APELLIDO';
+      const num = document.getElementById('player-number').value || '0';
+      document.getElementById('jersey-name-preview').textContent = name;
+      document.getElementById('jersey-num-preview').textContent = num;
+      gameState.lastname = name;
+      gameState.number = num;
+    }
+
+    function setArm(arm) {
+      gameState.arm = arm;
+      document.getElementById('arm-left').classList.toggle('active', arm === 'Izquierda');
+      document.getElementById('arm-right').classList.toggle('active', arm === 'Derecha');
+    }
+
+    function renderCountries(list) {
+      const box = document.getElementById('country-list-box');
+      box.innerHTML = '';
+      list.forEach(c => {
+        const item = document.createElement('div');
+        item.className = `country-item ${gameState.country.name === c.name ? 'selected' : ''}`;
+        item.innerHTML = `<span>${c.flag}</span> <span>${c.name}</span>`;
+        item.onclick = () => {
+          gameState.country = c;
+          renderCountries(list);
+        };
+        box.appendChild(item);
+      });
+    }
+
+    function filterCountries(query) {
+      const filtered = countries.filter(c => c.name.toLowerCase().includes(query.toLowerCase()));
+      renderCountries(filtered);
+    }
+
+    function selectPos(pos, btn) {
+      gameState.position = pos;
+      document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('selected-pos-text').innerText = `${pos}`;
+      document.getElementById('profile-arm-label').innerText = pos === 'P' ? 'PERFIL DE LANZAMIENTO' : 'BRAZO DE BATEO';
+    }
+
+    function confirmIdentity() {
+      goToScreen('screen-dashboard');
+      updateDashboard();
+      generateInitialRandomOffers();
+      addTimelineEntry(16, `Inició su camino buscando club en su país nativo (${gameState.country.name}).`);
+    }
+
+    function updateDashboard() {
+      document.getElementById('dash-ovr').innerText = gameState.ovr;
+      document.getElementById('dash-name').innerText = `V. ${gameState.lastname}`;
+      document.getElementById('dash-details').innerText = `${gameState.country.flag} #${gameState.number} ${gameState.position} | ${gameState.team}`;
+      document.getElementById('dash-val').innerText = `Valor: $${(gameState.value / 1000).toFixed(0)}K`;
+
+      const statsBox = document.getElementById('dash-stats-box');
+      if (gameState.position === 'P') {
+        statsBox.innerHTML = `
+          <div class="stat-box"><div class="stat-val">${gameState.stats.JJ}</div><div class="stat-lbl">JJ</div></div>
+          <div class="stat-box"><div class="stat-val">${gameState.stats.ERA}</div><div class="stat-lbl">ERA</div></div>
+          <div class="stat-box"><div class="stat-val">${gameState.stats.SO}</div><div class="stat-lbl">SO</div></div>
+        `;
+      } else {
+        statsBox.innerHTML = `
+          <div class="stat-box"><div class="stat-val">${gameState.stats.JJ}</div><div class="stat-lbl">JJ</div></div>
+          <div class="stat-box"><div class="stat-val">${gameState.stats.HR}</div><div class="stat-lbl">HR</div></div>
+          <div class="stat-box"><div class="stat-val">${gameState.stats.RBI}</div><div class="stat-lbl">RBI</div></div>
+        `;
+      }
+    }
+
+    // RANDOM OFFERS BASED ON COUNTRY SELECTION
+    function generateInitialRandomOffers() {
+      const countryKey = gameState.country.key;
+      let leagueData = countryTeamsDatabase[countryKey] || countryTeamsDatabase.CARIBBEAN_FALLBACK;
+
+      // Pick 3 random distinct teams
+      const shuffled = [...leagueData.teams].sort(() => 0.5 - Math.random());
+      const selectedOffers = shuffled.slice(0, 3);
+
+      const grid = document.getElementById('offers-grid-box');
+      grid.innerHTML = '';
+
+      selectedOffers.forEach(teamName => {
+        const card = document.createElement('div');
+        card.className = 'offer-card';
+        card.innerHTML = `
+          <div class="offer-info">
+            <h4>Fichar por ${teamName}</h4>
+            <span class="badge">${leagueData.league}</span>
+          </div>
+          <button class="btn-primary" style="padding: 10px 20px; font-size: 0.85rem;" onclick="acceptOffer('${teamName}', '${leagueData.league}')">Firmar Contrato</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function acceptOffer(teamName, leagueName) {
+      gameState.team = teamName;
+      gameState.signed = true;
+      updateDashboard();
+
+      document.getElementById('recruitment-subtitle').innerText = `Actualmente compitiendo con ${teamName} en la ${leagueName}.`;
+      document.getElementById('offers-grid-box').innerHTML = `
+        <div style="background: var(--bg-input); padding: 20px; border-radius: 12px; text-align: center;">
+          <p style="font-size: 0.9rem; color: var(--success-color); font-weight: 700;">✅ Bajo contrato activo con ${teamName}</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">Avanza de temporada para demostrar tu nivel y recibir interés de la MLB u otras ligas.</p>
+        </div>
+      `;
+
+      document.getElementById('btn-advance-season').style.display = 'block';
+      addTimelineEntry(gameState.age, `Firmó su primer contrato profesional con ${teamName}.`);
+    }
+
+    function addTimelineEntry(age, text) {
+      const box = document.getElementById('timeline-box');
+      const item = document.createElement('div');
+      item.className = 'timeline-item';
+      item.innerHTML = `
+        <div class="timeline-age">${age}y</div>
+        <div class="timeline-content">${text}</div>
+      `;
+      box.prepend(item);
+    }
+
+    // ADVANCE SEASON & RANDOM EVENTS
+    function advanceSeason() {
+      gameState.age++;
+      
+      if (gameState.position === 'P') {
+        gameState.stats.JJ += Math.floor(Math.random() * 25) + 10;
+        gameState.stats.SO += Math.floor(Math.random() * 120) + 40;
+        gameState.stats.ERA = (Math.random() * 3 + 2.1).toFixed(2);
+      } else {
+        gameState.stats.JJ += Math.floor(Math.random() * 100) + 40;
+        gameState.stats.HR += Math.floor(Math.random() * 25) + 2;
+        gameState.stats.RBI += Math.floor(Math.random() * 70) + 15;
+      }
+
+      // Check for MLB scout interest after age 18
+      if (gameState.age >= 18 && Math.random() > 0.4 && !gameState.team.includes("Yankees") && !gameState.team.includes("Dodgers")) {
+        triggerMLBScoutOffer();
+      } else {
+        triggerRandomEvent();
+      }
+    }
+
+    function triggerMLBScoutOffer() {
+      const randomMLBTeam = mlbDatabase[Math.floor(Math.random() * mlbDatabase.length)];
+      
+      document.getElementById('event-title').innerText = "⚾ Interés de Grandes Ligas (MLB)";
+      document.getElementById('event-desc').innerText = `¡Un cazatalentos de los ${randomMLBTeam} ha estado siguiendo tus estadísticas! Te ofrecen un contrato de ligas menores con invitación al Spring Training.`;
+      
+      const optsBox = document.getElementById('event-options-box');
+      optsBox.innerHTML = '';
+
+      const acceptBtn = document.createElement('button');
+      acceptBtn.className = 'event-opt-btn';
+      acceptBtn.innerText = `Aceptar oferta y dar el salto a ${randomMLBTeam}`;
+      acceptBtn.onclick = () => {
+        gameState.team = randomMLBTeam;
+        gameState.ovr += 5;
+        gameState.value += 500000;
+        addTimelineEntry(gameState.age, `Firmó con ${randomMLBTeam} dando el salto a las Grandes Ligas.`);
+        document.getElementById('event-modal').classList.remove('active');
+        updateDashboard();
+      };
+
+      const declineBtn = document.createElement('button');
+      declineBtn.className = 'event-opt-btn';
+      declineBtn.innerText = `Permanecer en ${gameState.team} y consolidarse como estrella local`;
+      declineBtn.onclick = () => {
+        addTimelineEntry(gameState.age, `Rechazó oferta de la MLB para seguir siendo la figura de ${gameState.team}.`);
+        document.getElementById('event-modal').classList.remove('active');
+        updateDashboard();
+      };
+
+      optsBox.appendChild(acceptBtn);
+      optsBox.appendChild(declineBtn);
+
+      document.getElementById('event-modal').classList.add('active');
+    }
+
+    function triggerRandomEvent() {
+      const events = [
+        {
+          title: "⚠️ Lesión / Manguito Rotador",
+          desc: "Sentiste un tirón fuerte durante la recta final de la temporada.",
+          options: [
+            { text: "Ingresar a la Lista de Lesionados (IL) para recuperarte", impact: () => { gameState.ovr += 1; addTimelineEntry(gameState.age, "Cumplió proceso de recuperación en la lista de lesionados."); } },
+            { text: "Jugar infiltrado arriesgando una molestia mayor", impact: () => { gameState.ovr -= 3; addTimelineEntry(gameState.age, "Compite con molestias acumuladas sufriendo una baja de rendimiento."); } }
+          ]
+        },
+        {
+          title: "📉 Asignación a Asignación / AAA",
+          desc: "El club necesita hacer espacio en el roster de 26 jugadores y evalúa enviarte a su sucursal Triple-A.",
+          options: [
+            { text: "Ir a AAA a trabajar duro en tu mecánica", impact: () => { gameState.ovr += 3; addTimelineEntry(gameState.age, "Ajustó detalles clave en Triple-A y regresó encendido."); } },
+            { text: "Pedir que te liberen para buscar un nuevo equipo", impact: () => { gameState.team = "Agente Libre"; addTimelineEntry(gameState.age, "Pidió su liberación y pasó a la agencia libre."); } }
+          ]
+        },
+        {
+          title: "🔥 Turno Clave en Serie Final",
+          desc: "Novena entrada, 2 outs, bases llenas. Vas perdiendo por 1 carrera.",
+          options: [
+            { text: "Priorizar contacto buscando un batazo al jardín derecho", impact: () => { gameState.ovr += 2; addTimelineEntry(gameState.age, "Conectó el hit del empate para llevar el juego a extra innings."); } },
+            { text: "Hacer swing completo buscando el Home Run de la victoria", impact: () => { gameState.ovr += 5; addTimelineEntry(gameState.age, "¡HOME RUN DE CAMPEONATO! Dejó tendido al rival en la Serie Final."); } }
+          ]
+        }
+      ];
+
+      const selectedEvent = events[Math.floor(Math.random() * events.length)];
+      
+      document.getElementById('event-title').innerText = selectedEvent.title;
+      document.getElementById('event-desc').innerText = selectedEvent.desc;
+      
+      const optsBox = document.getElementById('event-options-box');
+      optsBox.innerHTML = '';
+
+      selectedEvent.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'event-opt-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => {
+          opt.impact();
+          document.getElementById('event-modal').classList.remove('active');
+          updateDashboard();
+        };
+        optsBox.appendChild(btn);
+      });
+
+      document.getElementById('event-modal').classList.add('active');
+    }
+  </script>
+</body>
+</html>
